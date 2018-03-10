@@ -8,3 +8,4 @@ Built with PHP, RedbeanPHP, Vue2+axios and Bootstrap.
 
 ![Screenshot](https://i.imgur.com/gn98Y9D.gif)
 
+> To install it, git clone it, and then `composer install`.
