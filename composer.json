@@ -1,0 +1,5 @@
+{
+    "require": {
+        "gabordemooij/redbean": ">=4.2"
+    }
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Server Sent Events - Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <div id="app">
+    <div class="chat_window">
+      <div class="top_menu">
+        <div class="buttons" v-if="user.token">
+          <a class="button minimize" @click="signOut()" title="Sign Out" v-if="!connected"></a>
+          <a class="button close" @click="closeConnection()" title="Disconnect" v-if="connected"></a>
+          <a class="button maximize" @click="openConnection()" title="Reconnect" v-else></a>
+        </div>
+        <div class="title">Server Sent Events - Chat</div>
+      </div>
+      <div v-if="user.token">
+        <ul id="messages">
+          <li v-for="message in messages" :key="message.id">
+            <message :msg="message" />
+          </li>
+        </ul>
+        <div class="bottom_wrapper clearfix">
+          <div class="message_input_wrapper"><input class="message_input" v-model="message" :placeholder="placeholderText" @keyup.enter="postMessage" @input="checkMessage" /></div>
+          <div class="send_message" @click="postMessage">
+            <div class="icon"></div>
+            <div class="text">Send</div>
+          </div>
+          <span class="message_error" v-if="message_error" v-html="message_error"></span>
+        </div>
+      </div>
+      <div v-if="!user.token">
+        <signin @authenticated="setUser" />
+      </div>
+    </div>
+  </div>
+
+  <template id="message-template">
+    <div class="message" :class="message.side">
+      <div class="avatar" v-html="message.gravatar"></div>
+        <div class="text_wrapper">
+        <div class="text">{{ message.username ? message.username + ' - ' : '' }}{{ message.body }}</div>
+      </div>
+    </div>
+  </template>
+
+  <template id="signin-template">
+    <div id="signin">
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="form-wrap">
+            <h1>Sign in to chat</h1>
+            <form id="login-form" autocomplete="off">
+              <div class="form-group">
+                <label for="username" class="sr-only">Username</label>
+                <input type="text" v-model="form.username" class="form-control" placeholder="e.g: joe blogs...">
+              </div>
+              <div class="form-group">
+                <label for="email" class="sr-only">Email</label>
+                <input type="email" v-model="form.email" class="form-control" placeholder="enter your email address...">
+                <span class="help-block">Protect your username by locking it to an email address.</span>
+              </div>
+              <input type="button" id="btn-login" class="btn btn-custom btn-lg btn-block" value="Sign in" @click="signIn">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js" integrity="sha256-1Q2q5hg2YXp9fYlM++sIEXOcUb8BRSDUsQ1zXvLBqmA=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js" integrity="sha256-mpnrJ5DpEZZkwkE1ZgkEQQJW/46CSEh/STrZKOB/qoM=" crossorigin="anonymous"></script>
+  <script src="chat.js"></script>
+</body>
+
+</html>
